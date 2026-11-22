@@ -1,54 +1,33 @@
-# Software Defect Prediction Using Feature Selection and Machine Learning
+# Software defect prediction with feature selection
 
-## Abstract
+Exploratory notebooks for evaluating software defect classifiers with and without feature selection across six datasets.
 
-Software testing is crucial for delivering high-quality software. Early identification of defects minimizes costs and reduces risks associated with late-stage detection. Software Defect Prediction (SDP) techniques leverage machine learning approaches to predict defect-prone modules early in the development cycle. Feature selection (FS) plays a significant role in SDP model performance. This project evaluates the impact of various FS techniques on four supervised learning classifiers (SVM, KNN, Decision Tree, Naive Bayes) applied to six NASA datasets from the PROMISE repository.
+## Repository layout
 
-## Introduction
+- [Without feature selection](Without%20Feature%20Selection/) contains baseline classifier notebooks.
+- [With feature selection](With%20Feature%20Selection/) contains mutual-information experiments.
+- [Additional feature selection](new%20feature%20selection/) contains filter, embedded, and wrapper methods.
+- The root directory also contains an exploratory notebook and the six CSV snapshots below.
 
-Defects in software can lead to severe consequences, so early detection is paramount. SDP identifies modules with a higher likelihood of containing defects, enabling developers to prioritize testing efforts. This project investigates the effectiveness of FS techniques in conjunction with machine learning algorithms for enhancing SDP model performance.
+## Data
 
-## Methodology
+The original project documentation attributes the datasets to NASA and the PROMISE repository. The table describes the copies in this repository. Exact source editions, transformations, and redistribution terms remain unverified. Use the [tera-PROMISE defect catalog](https://openscience.us/repo/defect/) as a starting point when tracing a source edition.
 
-**1. Data Preprocessing:**
+| Dataset | Local CSV | Data rows | Target column |
+|---|---|---:|---|
+| CM1 | `cm1_csv(1).csv` | 498 | `defects` |
+| JM1 | `jm1_csv.csv` | 10,885 | `defects` |
+| KC1 | `kc1_csv.csv` | 2,109 | `defects` |
+| KC2 | `kc2_csv.csv` | 522 | `problems` |
+| PC1 | `pc1_csv.csv` | 1,109 | `defects` |
+| PC3 | `pc3_csv.csv` | 1,563 | `LABEL` |
 
-* Import necessary libraries (NumPy, pandas, matplotlib, seaborn).
-* Load CSV datasets using pandas.
-* Perform data exploration (shape, head, information).
-* Apply MinMaxScaler for normalization.
-* Separate features (X) and target variable (defects) for modeling.
+## Inspect and rerun
 
-**2. Feature Selection:**
+Start with the [CM1 baseline](Without%20Feature%20Selection/cm1_without_fs.ipynb) and [CM1 mutual-information example](With%20Feature%20Selection/cm1_FS_information%20gain.ipynb). They use Python, NumPy, pandas, matplotlib, seaborn, and scikit-learn. Open a working copy in Jupyter or Colab and check the CSV path in the data-loading cell. These CM1 notebooks reference the Colab path `/content/cm1_csv(1).csv`. For a local run from the repository root, point that cell at `cm1_csv(1).csv`.
 
-* Evaluate various FS techniques:
-    * **Filter-based:**
-        * SelectKBest (mutual information)
-        * SelectPercentile (mutual information)
-    * **Wrapper-based (not implemented in this code, see future work):** Utilize feature importance scores from trained models to select features.
-    * **Embedded:** Feature selection is integrated within the model training process (e.g., recursive feature elimination). 
-* Select a subset of features based on FS technique output.
+Both CM1 notebooks’ code cells ran on Python 3.12.10 after substituting the local CSV path. All 79 notebook files parsed as JSON. This check covers those two execution paths. The remaining notebooks and stored results were outside the execution check.
 
-**3. Model Training and Evaluation:**
+## Evaluation limits
 
-* Split data into training and testing sets using `train_test_split`.
-* Implement four machine learning classifiers:
-    * SVM (Support Vector Machine)
-    * KNN (K-Nearest Neighbors)
-    * Decision Tree
-    * Naive Bayes
-* Train each model on the training set.
-* Evaluate model performance on the testing set using metrics like accuracy, confusion matrix, and classification report.
-
-## Results
-
-- The project demonstrate that FS techniques significantly improve model performance.
-- SVM achieved the best overall accuracy among the evaluated classifiers.
-- Fisher's score (filter-based method) appeared to be the most effective FS technique in this study.
-
-## Conclusion
-
-This project highlights the importance of FS in software defect prediction. By optimizing feature selection, we can build more reliable and accurate SDP models, leading to improved software quality.
-
-## Code
-
-The provided code demonstrates the basic structure for feature selection, training, and evaluation of machine learning models for software defect prediction. Further refinements can be made to incorporate additional FS techniques, hyperparameter tuning, and more comprehensive analysis.
+The two inspected CM1 notebooks use different split settings. The baseline fits scaling before splitting, and the mutual-information example fits supervised feature selection before splitting. Those choices let information from the held-out data influence preprocessing. Treat the saved outputs as exploratory. A controlled comparison would fit preprocessing and feature selection on training data only, reuse the same splits, and report results under that protocol.
